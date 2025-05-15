@@ -1,82 +1,82 @@
 # 🔁 migrate-scheduler-jobs
 
-Este projeto contém um script bash para migrar jobs do Google Cloud Scheduler entre projetos, mantendo configurações, headers, body, e políticas de retry. Ideal para ambientes com múltiplos projetos (como dev e prod).
+This project contains a Bash script to migrate Google Cloud Scheduler jobs between projects, preserving configurations such as headers, body, and retry policies. Ideal for environments with multiple projects (e.g., dev and prod).
 
 ---
 
-## 🗂️ Estrutura do projeto
+## 🗂️ Project structure
 
 ```bash
 .
-├── script_source_to_target.sh     # Script principal para migração de jobs entre projetos
-├── schedulers.json                # Armazena os jobs extraídos no formato JSON
+├── script_source_to_target.sh     # Main script for migrating jobs between projects
+├── schedulers.json                # Stores exported jobs in JSON format
 
 
-## ⚙️ Pré-requisitos
+## ⚙️ Prerequisites
 
-- Ter o SDK do Google Cloud (`gcloud`) instalado e autenticado.
-- Ter o `jq` instalado para leitura de arquivos JSON.
-- Permissões suficientes nos projetos de origem e destino (`Cloud Scheduler Admin`, `Service Account User`, `Permissão para listar e criar jobs`).
+- Google Cloud SDK (gcloud) installed and authenticated.
+- `jq` installed for reading JSON files.
+- Sufficient permissions on both source and destination projects (Cloud `Scheduler Admin`, `Service Account User`, `Permission to list and create jobs`).
 
 ---
 
-## 🚀 Como usar
+## 🚀 How to use
 
-### Passo 1️⃣: Configure os parâmetros do script
+###  Step 1️⃣: Configure script parameters
 
-Abra o arquivo script_source_to_target.sh e defina:
+Open the script_source_to_target.sh file and set the following variables:
 ```bash
   SOURCE_PROJECT=""
   DESTINATION_PROJECT=""
   SOURCE_LOCATION=""
   DESTINATION_LOCATION=""
 ```
-### Passo 2️⃣: Execute o script
+### Step 2️⃣: Run the script
 
-Execute o script:
+Execute the script:
 
 ```bash
   bash script_source_to_target.sh
 ```
 
-Esse script irá:
+The script will:
 
-- Buscar todos os jobs no projeto e região de origem.
-- Perguntar se você deseja copiar cada job encontrado.
-- Exportar o JSON do job original.
-- SArmazenar uma cópia no arquivo `schedulers.json`.
-- Gerar dinamicamente o comando para recriar o job no projeto de destino com:
-URI,Método HTTP,Body (base64 decodificado),Headers HTTP, Retry policy, Timezone, Schedule, Descrição
-- Pausar o job original após criação (e o novo, caso estivesse pausado).
-
----
-
-## 💡 Funcionalidades adicionais
-
-- Evita sobrescrever jobs existentes no projeto de destino.
-- Valida JSON com jq antes de qualquer ação.
-- Garante headers concatenados corretamente com um único --headers.
-- Trata corretamente corpo em base64.
-- Aplica configurações de retryConfig do job original.
-
-## 🛡️ Segurança e confiabilidade
-
-- O script exige confirmação antes de copiar cada job.
-- Jobs existentes no destino são detectados e ignorados com aviso.
-- Todos os jobs exportados são armazenados em schedulers.json.
-- Os jobs originais são pausados para evitar execução duplicada.
+- List all jobs in the source project and location.
+- Prompt you to confirm whether to copy each job.
+- Export the original job JSON.
+- SStore a copy in the `schedulers.json` file.
+- Dynamically generate the command to recreate the job in the target project, including:
+URI, HTTP Method, Body (base64 decoded), HTTP Headers, Retry policy, Timezone, Schedule, Description.
+- Pause the original job after creation (and the new one, if it was already paused).
 
 ---
 
+## 💡 Additional features
 
-## ℹ️ Observações
+- Avoids overwriting existing jobs in the target project.
+- Validates JSON with `jq` before taking action.
+- Ensures headers are correctly concatenated using a single `--headers`.
+- Properly handles `base64-encoded` bodies.
+- Applies the original job’s `retryConfig`.
 
-- O script atualmente suporta apenas jobs do tipo http.
-- Certifique-se de revisar os headers e corpo dos jobs no schedulers.json antes de criar no destino.
+## 🛡️ Safety and reliability
+
+- The script requires confirmation before copying each job.
+- Existing jobs in the destination project are detected and skipped with a warning.
+- All exported jobs are saved in schedulers.json.
+- Original jobs are paused to prevent duplicate execution.
 
 ---
 
-## 📄 Exemplo de JSON exportado
+
+## ℹ️ Notes
+
+- The script currently supports only HTTP-type jobs.
+- Be sure to review headers and body of each job in `schedulers.json` before creating them in the destination.
+
+---
+
+## 📄 Example of exported JSON
 ```json
   {
     "name": "projects/meu-projeto-dev/locations/us-east1/jobs/job-de-exemplo",
@@ -94,9 +94,9 @@ URI,Método HTTP,Body (base64 decodificado),Headers HTTP, Retry policy, Timezone
 ```
 ---
 
-## ✅ Exemplo de execução
+## ✅ Execution example
 
 ```bash
-vim migrate_scheduler_jobs.sh  # Configure variáveis de ambiente
+vim migrate_scheduler_jobs.sh  # Configure environment variables
 bash migrate_scheduler_jobs.sh
 ```
