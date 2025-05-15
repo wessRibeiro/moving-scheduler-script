@@ -10,7 +10,7 @@ This project contains a Bash script to migrate Google Cloud Scheduler jobs betwe
 .
 ├── script_source_to_target.sh     # Main script for migrating jobs between projects
 ├── schedulers.json                # Stores exported jobs in JSON format
-
+```
 
 ## ⚙️ Prerequisites
 
