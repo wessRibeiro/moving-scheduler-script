@@ -151,10 +151,10 @@ for full_job_name in "${jobs[@]}"; do
         echo "$create_cmd" || error_exit "Error to create job $JOB_NAME"
         eval "$create_cmd" || error_exit "Error to create job $JOB_NAME"
         
-        log "✅ Job '$JOB_NAME' criado com sucesso."
-
+        log "✅ Job '$JOB_NAME' created."
+  
         # pause job if it is paused from origin
-        if [[ "$STATE" == "PAUSED" ]]; then
+        if [[ "$JOB_STATE" == "PAUSED" ]]; then
             log "⏸️  Pausing job '$JOB_NAME' in project destination..."
             gcloud scheduler jobs pause "$JOB_NAME" \
                 --project="$DESTINATION_PROJECT" \
